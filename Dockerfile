@@ -18,7 +18,7 @@ RUN yum install -y epel-release
 # Clean CentOS 6.7
 RUN yum clean all
 
-# Set the environment variables
+# Set the environment variables1
 ENV HOME /root
 
 # Working directory
