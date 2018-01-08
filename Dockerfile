@@ -30,7 +30,7 @@ RUN yum install -y wget openssl ca-certificates \
 	&& cd /tmp \
 	&& wget --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u151-b12/e758a0de34e24606bca991d704f6dcbf/jdk-8u151-linux-i586.tar.gz \
 	&& mv jdk-8u151-linux-i586.tar.gz jdk8.tar.gz \
-	&& tar xzf jdk8.tar.gz -C /opt \
+	&& /bin/tar xzf jdk8.tar.gz -C /opt \
     && mv /opt/jdk* /opt/java \
     && rm /tmp/jdk8.tar.gz \
     && update-alternatives --install /usr/bin/java java /opt/java/bin/java 100 \
