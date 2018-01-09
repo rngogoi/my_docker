@@ -37,7 +37,9 @@ RUN alternatives --install /usr/bin/javaws javaws /usr/java/latest/bin/javaws 20
 RUN alternatives --install /usr/bin/javac javac /usr/java/latest/bin/javac 200000
 
 #ENV JAVA_HOME /usr/java/latest
-COPY .bash_profile /
+
+RUN rm /root/.bash_profile
+COPY .bash_profile /root/
 
 
 
