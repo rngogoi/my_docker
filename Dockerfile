@@ -100,7 +100,6 @@ USER root
 ##### Initialize HDFS Directories #####
 RUN bash -c 'for x in `cd /etc/init.d ; ls hadoop-hdfs-*` ; do service $x start ; done' ; \
     bash /usr/lib/hadoop/libexec/init-hdfs.sh \
-    oozie-setup sharelib create -fs hdfs://localhost -locallib /usr/lib/oozie/oozie-sharelib-yarn.tar.gz ; \
     bash -c 'for x in `cd /etc/init.d ; ls hadoop-hdfs-*` ; do service $x stop ; done' ;
 ##### Note: Keep commands on a single line, as we need to init HDFS while services are running
 
@@ -130,7 +129,7 @@ RUN echo "spark.executor.extraClassPath=/opt/ojdbc6.jar | tee -a /etc/spark/conf
 RUN echo "spark.driver.extraClassPath=/opt/ojdbc6.jar | tee -a /etc/spark/conf/spark-defaults.conf"
 
 
-CMD ["run.sh"]
+CMD ["bash"]
 
 
 
