@@ -26,17 +26,19 @@ WORKDIR /root
 
 #installing Java
 
-RUN yum install -y wget openssl ca-certificates \
-	&& cd /tmp \
-	&& wget --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u151-b12/e758a0de34e24606bca991d704f6dcbf/jdk-8u151-linux-i586.tar.gz \
-	&& mv jdk-8u151-linux-i586.tar.gz jdk8.tar.gz \
-	&& /bin/tar xzf jdk8.tar.gz -C /opt \
-    && mv /opt/jdk* /opt/java \
-    && rm /tmp/jdk8.tar.gz \
-    && update-alternatives --install /usr/bin/java java /opt/java/bin/java 100 \
-    && update-alternatives --install /usr/bin/javac javac /opt/java/bin/javac 10
+#installing Java
 
-ENV JAVA_HOME /opt/java	
+RUN yum -y install wget \
+	&& yum install -y wget openssl ca-certificates \
+	&& wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u151-b12/e758a0de34e24606bca991d704f6dcbf/jdk-8u151-linux-x64.rpm" -O /tmp/jdk-8u151-linux-x64.rpm \
+	&& yum -y install /tmp/jdk-8u151-linux-x64.rpm \
+	
+	
+RUN alternatives --install /usr/bin/java jar /usr/java/latest/bin/java 200000
+RUN alternatives --install /usr/bin/javaws javaws /usr/java/latest/bin/javaws 200000
+RUN alternatives --install /usr/bin/javac javac /usr/java/latest/bin/javac 200000
+
+ENV JAVA_HOME /usr/java/latest
 
 
 
