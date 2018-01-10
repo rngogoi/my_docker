@@ -36,11 +36,13 @@ RUN alternatives --install /usr/bin/java jar /usr/java/latest/bin/java 200000
 RUN alternatives --install /usr/bin/javaws javaws /usr/java/latest/bin/javaws 200000
 RUN alternatives --install /usr/bin/javac javac /usr/java/latest/bin/javac 200000
 
-#ENV JAVA_HOME /usr/java/latest
+ENV JAVA_HOME /usr/java/latest
+ENV JRE_HOME /usr/java/latest/jre
+ENV PATH $PATH:$JAVA_HOME/bin:$JRE_HOME/bin
 
-RUN rm /root/.bash_profile
-COPY .bash_profile /root/
-RUN source /root/.bash_profile
+#RUN rm /root/.bash_profile
+#COPY .bash_profile /root/
+#RUN source /root/.bash_profile
 
 ##### Install basic linux tools #####
 RUN yum install -y wget unzip dialog curl sudo lsof vim axel telnet
@@ -63,30 +65,33 @@ RUN yum install -y hadoop-mapreduce hadoop-mapreduce-historyserver
 RUN yum install -y  hadoop-client hadoop-conf-pseudo
 
 ##### Install Zookeeper #####
-RUN yum install -y zookeeper zookeeper-server
+#RUN yum install -y zookeeper zookeeper-server
 
 ##### Install HBase #####
-RUN yum install -y hbase-master hbase hbase-thrift
+#RUN yum install -y hbase-master hbase hbase-thrift
+
+##### Install HBase Region Server #####
+#RUN yum install -y hbase-regionserver
 
 ##### Install Oozie #####
-RUN yum install -y oozie oozie-client
+#RUN yum install -y oozie oozie-client
 
 ##### Install Spark #####
 RUN yum install -y spark-core spark-master spark-worker spark-history-server spark-python
 
 ##### Install Hive #####
-RUN yum install -y hive hive-metastore hive-hbase
+#RUN yum install -y hive hive-metastore hive-hbase
 
 ##### Install Hue #####
-RUN yum install -y hue hue-server
+#RUN yum install -y hue hue-server
 
 ##### Install SolR #####
-RUN yum -y install solr-server hue-search
+#RUN yum -y install solr-server hue-search
 
 
 ##### Install MySQL and connector #####
-RUN yum -y install mysql mysql-server mysql-connector-java
-RUN ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-connector-java.jar
+#RUN yum -y install mysql mysql-server mysql-connector-java
+#RUN ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-connector-java.jar
 ##### Note: Will use mysql for Hive metastore
 
 
@@ -100,21 +105,22 @@ USER root
 ##### Initialize HDFS Directories #####
 RUN bash -c 'for x in `cd /etc/init.d ; ls hadoop-hdfs-*` ; do service $x start ; done' ; \
     bash /usr/lib/hadoop/libexec/init-hdfs.sh \
+	#oozie-setup sharelib create -fs hdfs://localhost -locallib /usr/lib/oozie/oozie-sharelib-yarn.tar.gz ; \
     bash -c 'for x in `cd /etc/init.d ; ls hadoop-hdfs-*` ; do service $x stop ; done' ;
 ##### Note: Keep commands on a single line, as we need to init HDFS while services are running
 
 
 ##### Set up Oozie / HUE / Hive ??? #####
-RUN oozie-setup db create -run
-RUN sed -i 's/secret_key=/secret_key=_S@s+D=h;B,s$C%k#H!dMjPmEsSaJR/g' /etc/hue/conf/hue.ini
+#RUN oozie-setup db create -run
+#RUN sed -i 's/secret_key=/secret_key=_S@s+D=h;B,s$C%k#H!dMjPmEsSaJR/g' /etc/hue/conf/hue.ini
 
 ##### Make this container SSH friendly #####
 RUN yum -y install openssh-server openssh-clients
-# Start `sshd` to generate host DSA & RSA keys
+#Start `sshd` to generate host DSA & RSA keys
 RUN service sshd start
 
 
-ADD files/hive-site.xml /usr/lib/hive/conf/
+#ADD files/hive-site.xml /usr/lib/hive/conf/
 
 # Add the Hadoop start-up scripts
 ADD scripts/* /opt/
